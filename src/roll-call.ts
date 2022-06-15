@@ -1,22 +1,22 @@
 import { NameCount, Name } from './typings'
 
 export class RollCall {
-  private nameCount: NameCount
-  private nameList: Name[]
+  readonly #nameCount: NameCount
+  readonly #nameList: Name[]
 
   constructor () {
-    this.nameCount = {}
-    this.nameList = []
+    this.#nameCount = {}
+    this.#nameList = []
   }
 
   public addName (name: Name) {
-    const currentNameCount = this.nameCount[name.firstName] ? this.nameCount[name.firstName] : 0
-    this.nameCount[name.firstName] = currentNameCount + 1
-    this.nameList.push(name)
+    const currentNameCount = this.#nameCount[name.firstName] ? this.#nameCount[name.firstName] : 0
+    this.#nameCount[name.firstName] = currentNameCount + 1
+    this.#nameList.push(name)
   }
 
   public getSortedNameList (): Name[] {
-    return this.nameList.sort((aName, bName) => aName.lastName.localeCompare(bName.lastName))
+    return [...this.#nameList].sort((aName, bName) => aName.lastName.localeCompare(bName.lastName))
   }
 
   public printNameList (): void {
@@ -26,11 +26,15 @@ export class RollCall {
     }
   }
 
-  private printName (name: Name): void {
-    if (this.nameCount[name.firstName] !== undefined && this.nameCount[name.firstName] > 1) {
-      console.log(`${name.firstName} ${name.lastName}`)
+  protected printName (name: Name): void {
+    if (this.#nameCount[name.firstName] !== undefined && this.#nameCount[name.firstName] > 1) {
+      this.printRow(`${name.firstName} ${name.lastName}`)
     } else {
-      console.log(name.firstName)
+      this.printRow(name.firstName)
     }
+  }
+
+  protected printRow (message: string): void {
+    console.log(message)
   }
 }
